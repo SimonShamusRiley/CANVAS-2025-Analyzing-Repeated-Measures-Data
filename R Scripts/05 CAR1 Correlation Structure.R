@@ -44,18 +44,20 @@ tryCatch.W.E <- function(expr){
 }
 
 # Extract system names and create list to save output
-systems = unique(soilN$System)
+systems = unique(soilN$system)
 model_list = list()
 
 for (s in systems) {
-  model_list[[s]] <- lme(
+  print(s)
+  model_list[[s]] <- tryCatch.W.E({
+    lme(
     fixed = response ~ trt*year*D_class, 
     data = filter(soilN, system == s & DAP == dap),
     random = ~ 1|block/trt/year,
     correlation = corCAR1(form = ~ depth|block/trt/year), 
     weights = varIdent(form = ~1|D_class)
-  )
+  )})
 }
 
-model_list[[s]]$value # Either a fitted model or an error message
+model_list$Tile$value # Either a fitted model or an error message
 
