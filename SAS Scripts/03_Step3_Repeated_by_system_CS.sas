@@ -25,7 +25,7 @@ Proc MIXED data=Selected plots=StudentPanel CL nobound;
 	Class system Block Trt Plot Year DAP Depth subject_depth;
 	Model response= Trt|Year|DAP|Depth/outp=resid residual;* ddfm=kr2;
 	Random  Block  Block*Trt  Block*Year Block*Trt*Year Block*DAP Block*Trt*Year*DAP;*SP;
-	*Random  Block  Block*Trt  Block*Trt*Year Block*Trt*Year*DAP;*repeated measures CS;
+	Random  Block  Block*Trt  Block*Trt*Year Block*Trt*Year*DAP;*repeated measures CS;
 	ods output tests3=AOV covparms=Cout fitstatistics=Fout;
 run;
 ods select all;

@@ -6,9 +6,9 @@ proc datasets library=work kill memtype=data;quit;
 %let resp_name = NHNO;
 
 %let system = Drip;
-/*%let system = Overhead;*/
-/*%let system = Seepage;*/
-/*%let system = Tile;*/
+%let system = Overhead;
+%let system = Seepage;
+%let system = Tile;
 
 %let DAP =1;
 /*%let DAP =21;*/
@@ -26,7 +26,7 @@ Data Selected;
 	Subject_Depth=Catt(Block,Trt,DAP);*need to work on this;
 run;
 proc sort; by system DAP; run;
-proc print data=selected (obs=10); run;
+proc print data=selected (obs=1); run;
 
 /*Incorporating year into the model and looking at each System * DAP Separately*/
 dm'log; clear; output; clear;odsresults;clear;';*clears most output and all log;
