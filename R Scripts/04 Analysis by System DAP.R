@@ -4,6 +4,7 @@
 # Step 4: Modelling by System and DAP, with Depth Repeated                     #
 #==============================================================================#
 
+# Limiting the analysis to one system and time point
 sys <- 'Drip'
 dap <- '1'
 
@@ -14,7 +15,7 @@ model_un <- lme(
   fixed = response ~ trt*year*D_class, 
   data = filter(soilN, system == sys & DAP == dap),
   random = ~ 1|block/trt/year,
-  correlation = corSymm(form = ~ 1|block/trt/year), 
+  correlation = corNatural(form = ~ 1|block/trt/year), 
   weights = varIdent(form = ~1|D_class)
 )
 

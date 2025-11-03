@@ -7,6 +7,7 @@
 # While the SAS users are looking at PROC HPMIXED, we can instead look at the 
 # use of other correlation structures:
 
+# Still limiting the analysis to one system and time point
 sys <- 'Drip'
 dap <- '1'
 
@@ -23,3 +24,38 @@ model_car1 <- lme(
 
 # Estimated correlation:
 model_car1$modelStruct$corStruct
+
+# If we wanted to iterate through the analysis of all the 
+# systems, we can do so with a for loop, but when doing this
+# it is also helpful to set up error handling procedures, so
+# the the loop isn't broken if there are convergence or other
+# issues during one of the model fitting. 
+
+# Create error catcher
+tryCatch.W.E <- function(expr){
+  W <- NULL
+  w.handler <- function(w) { # warning handler
+    W <<- w
+    invokeRestart("muffleWarning")
+  }
+  list(value = withCallingHandlers(tryCatch(expr, error = function(e) e),
+                                   warning = w.handler),
+       warning = W)
+}
+
+# Extract system names and create list to save output
+systems = unique(soilN$System)
+model_list = list()
+
+for (s in systems) {
+  model_list[[s]] <- lme(
+    fixed = response ~ trt*year*D_class, 
+    data = filter(soilN, system == s & DAP == dap),
+    random = ~ 1|block/trt/year,
+    correlation = corCAR1(form = ~ depth|block/trt/year), 
+    weights = varIdent(form = ~1|D_class)
+  )
+}
+
+model_list[[s]]$value # Either a fitted model or an error message
+

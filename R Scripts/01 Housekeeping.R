@@ -7,6 +7,14 @@
 # Install required packages (this only needs to be done once when you install
 # or update R, so you can skip this if these packages are already installed)
 install.packages('tidyverse')
+install.packages('readxl')
+install.packages('lmerTest')
+install.packages('emmeans')
+install.packages('multcomp')
+install.packages('multcompView')
+install.packages('car')
+install.packages('ggResidpanel')
+install.packages('writexl')
 
 # Load required packages
 library(readxl)

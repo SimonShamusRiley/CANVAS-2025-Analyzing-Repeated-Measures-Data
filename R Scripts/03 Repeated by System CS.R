@@ -4,11 +4,14 @@
 # Step 3: Repeated by System - Compound Symmetry Assumption                    #
 #==============================================================================#
 
+# For simplicity of the demonstration, we are limiting the analysis to a 
+# single system
 sys <- 'Drip'
 
 # Fitting a split plot in time/space model. Note the warning which says 
 # "singular fit", which indicates that one or more random effect was estimated
-# to be essentially zero.
+# to be (very near) zero. This is not always a problem, but can be, and should
+# be seen as a red flag. 
 model_spt <- lmer(
   response ~ trt * year * DAP * D_class + 
     (1 | block) + 

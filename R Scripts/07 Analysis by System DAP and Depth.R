@@ -4,9 +4,10 @@
 # Step 7: Modelling Depth and DAP as Repeated                                  #
 #==============================================================================#
 
+# Limit analysis to one system
 sys <- 'Drip'
 
-# This takes about 200 sec to fit on my machine, so I've 
+# This takes several minutes to fit on my machine, so I've 
 # commented it out, and the fitted model can be read in below.
 
 # There are several important points to note here. First, we have
@@ -20,7 +21,7 @@ sys <- 'Drip'
 # of the control = lmeControl() argument. 
 
 # model_un3 <- lme(
-#   fixed = response ~ trt*year*depth*DAP,
+#   fixed = response ~ trt*year*D_class*DAP,
 #   data = filter(soilN, system == sys),
 #   random = list(block = ~1, trt = ~1, year = ~1,
 #                 year = ~ DAP-1),
@@ -28,8 +29,9 @@ sys <- 'Drip'
 #   weights = varIdent(form = ~1|D_class),
 #   control = lmeControl(maxIter = 100, msMaxIter = 100, niterEM = 50)
 # )
+# saveRDS(model_un3, 'Results/Drip UN Model for DAP & Depth.rds')
 
-mod_un3 <- readRDS('Results/Drip UN Model for DAP & Depth.rds')
+model_un3 <- readRDS('Results/Drip UN Model for DAP & Depth.rds')
 
 # Check residuals
 res_un3 <- resid(model_un3, type = 'normalized')
@@ -43,8 +45,13 @@ resid_auxpanel(res_un3, fit_un3)
 # the best we can do is satterthwaite)
 (ftest_un3 <- joint_tests(model_un3))
 
+# If we wanted to generate estimates, we do so with emmeans, 
+# for example:
+(emm1 = emmeans(model_un3, ~ trt|D_class))
+
 # If we wanted to save those output:
 output <- list('F test' = as.data.frame(ftest_un3), 
-              'Var Param Ests' = as.data.frame(vc_un3))
+              'Var Param Ests' = as.data.frame(vc_un3), 
+              'Ests' = as.data.frame(emm1))
 file_out <- paste0('Results/', sys, ' Analysis Results.xlsx')
 write_xlsx(x = output, path = file_out)
